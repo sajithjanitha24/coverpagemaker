@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Page Generator</title>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2em;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5em;
+        }
+        .form-group {
+            margin-bottom: 1em;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box; /* Important for padding to work nicely */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        textarea {
+            height: 120px;
+            font-family: inherit;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            color: #222;
+        }
+        .full-width {
+            grid-column: 1 / -1; /* Makes an item span both columns */
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cover Page Generator</h1>
+        
+        <form action="/generate" method="POST">
+            <div class="grid">
+                <div>
+                    <div class="form-group">
+                        <label for="experimentNo">Experiment No:</label>
+                        <input type="text" id="experimentNo" name="experimentNo" value="01">
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name:</label>
+                        <input type="text" id="subjectName" name="subjectName" value="COMPUTER TECHNOLOGY AND NETWORKING">
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectCode">Subject Code:</label>
+                        <input type="text" id="subjectCode" name="subjectCode" value="EN1211">
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor">Instructor:</label>
+                        <input type="text" id="instructor" name="instructor" value="MRS.A.K.LIYANAGE">
+                    </div>
+                    <div class="form-group">
+                        <label for="group">Group:</label>
+                        <input type="text" id="group" name="group" value="G07">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input type="text" id="name" name="name" value="W.M.S.J. WANASINGHE">
+                    </div>
+                    <div class="form-group">
+                        <label for="regNo">Your Reg No:</label>
+                        <input type="text" id="regNo" name="regNo" value="COL/EE/2324/F/217">
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Course:</label>
+                        <input type="text" id="course" name="course" value="HNDEEE">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateInstr">Date of Instruction:</label>
+                        <input type="text" id="dateInstr" name="dateInstr" value="03.03.2025">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateSub">Date of Submission:</label>
+                        <input type="text" id="dateSub" name="dateSub" value="24.03.2025">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="topic">Topic:</label>
+                    <textarea id="topic" name="topic">USER MANUAL TO ASSEMBBLE PC AND INSTALL OS AND RELATED SOFTWARE CONFIGURATION FOR ADVANCED SYSTEM SETUP</textarea>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="groupMembers">Group Members (one per line):</label>
+                    <textarea id="groupMembers" name="groupMembers">COL/EE/2324/F/205
+COL/EE/2324/F/206
+COL/EE/2324/F/207</textarea>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button type="submit">Generate PDF</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
