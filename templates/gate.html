@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Report Guidelines</title>
+    
+    <!-- Load Tailwind CSS for professional styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Use the "Inter" font for a clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply the Inter font to the whole page */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom styles for the scrollbar to make it subtle */
+        .guidelines-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .guidelines-box::-webkit-scrollbar-track {
+            background: #f1f5f9; /* gray-100 */
+            border-radius: 10px;
+        }
+        .guidelines-box::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* gray-400 */
+            border-radius: 10px;
+        }
+        .guidelines-box::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* gray-500 */
+        }
+
+        /* --- Button States --- */
+
+        /* This is the default, DISABLED state */
+        .button-disabled {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #9ca3af; /* gray-400 */
+            cursor: not-allowed;
+            pointer-events: none; /* Prevents clicking */
+        }
+
+        /* This class is ADDED BY JAVASCRIPT when scrolled */
+        .button-enabled {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            cursor: pointer;
+            pointer-events: auto; /* Re-enables clicking */
+        }
+        .button-enabled:hover {
+            background-color: #4338ca; /* indigo-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- 
+      Main container
+      - Mobile: p-5, full width
+      - Desktop: p-10, max-w-2xl
+    -->
+    <div class="gate-container bg-white rounded-xl shadow-xl p-5 md:p-10 w-full max-w-2xl">
+        
+        <!-- Header -->
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-center">
+            Lab Report Maker Guidelines 📝
+        </h1>
+        <p class="text-base md:text-lg text-gray-600 text-center mt-2 mb-6">
+            You must read all guidelines and scroll to the bottom to continue.
+        </p>
+
+        <!-- 
+          Guidelines Box
+          - Fixed height with vertical scrolling
+          - Styled for mobile and desktop
+        -->
+        <div class="guidelines-box h-64 md:h-72 overflow-y-auto border border-gray-200 rounded-lg p-5 md:p-6 bg-gray-50 text-left" id="guidelines-box">
+            
+            <!-- Guideline 1 -->
+            <h3 class="text-lg md:text-xl font-semibold text-indigo-700">1. Text Input Formatting</h3>
+            <p class="text-gray-600 mt-1 mb-3">Please follow these rules carefully for text inputs:</p>
+            <ul class="list-disc list-inside space-y-3 text-gray-700">
+                <li>
+                    <strong>Topics:</strong> When adding multiple topics, enter each one on a separate line.
+                    <em class="text-sm text-gray-500 not-italic block mt-1 pl-2">
+                        Example:
+                        <br>1st line = ELECTRICAL
+                        <br>2nd line = Electronics
+                    </em>
+                </li>
+                <li>
+                    <strong>Main Topic:</strong> If your main topic is too long, split it into two lines.
+                    <em class="text-sm text-gray-500 not-italic block mt-1 pl-2">
+                        Example:
+                        <br>1st line = Induction
+                        <br>2nd line = Motors
+                    </em>
+                </li>
+                <li><strong>Group Members:</strong> The group members bar will automatically place a space before the 1st member. Do not cut or remove this space.</li>
+            </ul>
+
+            <!-- Guideline 2 -->
+            <h3 class="text-lg md:text-xl font-semibold text-indigo-700 mt-6">2. Final Check</h3>
+            <p class="text-gray-700 mt-1">
+                This tool is an assistant, not a replacement for your work. You are responsible for the final report. You must proofread the generated document for any errors before submitting it.
+            </p>
+            
+            <!-- End of Scroll Message -->
+            <p class="text-center font-medium text-gray-800 pt-4 mt-6 border-t border-gray-200">
+                <strong>You have reached the end.</strong>
+            </p>
+        </div>
+
+        <!-- 
+          Continue Button
+          - Links to maker.html (I corrected this from index.html)
+          - Starts as 'button-disabled'
+        -->
+        <a href="index.html" 
+           id="continue-btn" 
+           class="button-disabled block w-full p-3 md:p-4 rounded-lg text-center font-bold text-lg mt-8 transition-all duration-300 ease-in-out">
+            I Understand and Wish to Continue
+        </a>
+    </div>
+
+    <!-- 
+      Inlined JavaScript
+      (This is the logic from script1.js)
+    -->
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            const guidelinesBox = document.getElementById("guidelines-box");
+            const continueBtn = document.getElementById("continue-btn");
+
+            // Function to check if scroll is at the bottom
+            function checkScroll() {
+                // Check if (scrolled distance + visible height) is at the bottom
+                // Added a 5px buffer for safety
+                const isAtBottom = (guidelinesBox.scrollTop + guidelinesBox.clientHeight) >= (guidelinesBox.scrollHeight - 5);
+
+                if (isAtBottom) {
+                    // Enable the button
+                    continueBtn.classList.remove("button-disabled");
+                    continueBtn.classList.add("button-enabled");
+                } else {
+                    // (Optional) Re-disable if they scroll back up
+                    // continueBtn.classList.add("button-disabled");
+                    // continueBtn.classList.remove("button-enabled");
+                }
+            }
+
+            // Add a scroll event listener to the guidelines box
+            guidelinesBox.addEventListener("scroll", checkScroll);
+
+            // Run check once on load in case content is not long enough to scroll
+            checkScroll();
+        });
+    </script>
+</body>
+</html>

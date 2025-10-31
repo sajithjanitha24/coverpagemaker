@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Page Generator</title>
+    
+    <style>
+        /* --- General Body Styles (Updated) --- */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 2em;
+            background-color: #e0e0e0;
+        }
+
+        /* --- Header (New Section) --- */
+        header {
+            text-align: center;
+            padding: 1em 0;
+            margin-bottom: 2em;
+            color: #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .visitor-counter {
+            font-size: 1.1em;
+            margin-top: 0.5em;
+            color: #555;
+        }
+
+        /* --- Main Content Container (Original) --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5em;
+        }
+        .form-group {
+            margin-bottom: 1em;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        textarea {
+            height: 120px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            color: #222;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 1.5em;
+        }
+
+        /* --- Footer (New Section) --- */
+        footer {
+            text-align: center;
+            margin-top: 2em;
+            padding: 1.5em;
+            color: #444;
+        }
+        .social-links a {
+            margin: 0 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- NEW STYLES for Radio Buttons --- */
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .radio-group label {
+            font-weight: normal; /* Make radio labels not bold */
+            margin-bottom: 0;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ================== HEADER ================== -->
+    <header>
+        <h1>Cover Page Generator</h1>
+        <div class="visitor-counter">
+            Total Visitors: <span id="visitorCount">0</span>
+        </div>
+    </header>
+    <!-- ============================================ -->
+
+    <div class="container">
+        <form action="/generate" method="POST">
+            <div class="grid">
+
+                <!-- ========================================================== -->
+                <!-- == 1. NEW "REPORT TYPE" SECTION ADDED HERE              == -->
+                <!-- ========================================================== -->
+                <div class="form-group full-width">
+                    <label>Report Type:</label>
+                    <div class="radio-group">
+                        <label for="lab">
+                            <input type="radio" name="report_type" value="lab" id="lab" checked>
+                            Lab Report
+                        </label>
+                        <label for="assignment">
+                            <input type="radio" name="report_type" value="assignment" id="assignment">
+                            Assignment
+                        </label>
+                    </div>
+                </div>
+                <!-- ========================================================== -->
+
+                <div>
+                    <div class="form-group">
+                        <!-- ID added here to allow JavaScript to change the text -->
+                        <label for="experimentNo" id="expNoLabel">Experiment No:</label>
+                        <input type="text" id="experimentNo" name="experimentNo" value="" placeholder="01">
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name:</label>
+                        <textarea id="subjectName" name="subjectName" placeholder="If subject name get three words.Write last word on below line"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectCode">Subject Code:</label>
+                        <input type="text" id="subjectCode" name="subjectCode" value="" placeholder="code of the subject">
+                    </div>
+
+                    <!-- ========================================================== -->
+                    <!-- == 2. "lab-only-field" CLASS ADDED TO HIDE THESE FIELDS == -->
+                    <!-- ========================================================== -->
+                    <div class="form-group lab-only-field">
+                        <label for="instructor">Instructor:</label>
+                        <input type="text" id="instructor" name="instructor" value=" " placeholder="Name of demonstrator">
+                    </div>
+                    <div class="form-group lab-only-field">
+                        <label for="group">Group:</label>
+                        <input type="text" id="group" name="group" value=" " placeholder="Group number">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input type="text" id="name" name="name" value="" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="regNo">Your Reg No:</label>
+                        <input type="text" id="regNo" name="regNo" value="" placeholder="Register Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Course:</label>
+                        <input type="text" id="course" name="course" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateInstr">Date of Instruction:</label>
+                        <input type="text" id="dateInstr" name="dateInstr" value="" placeholder="dd/mm/yy">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateSub">Date of Submission:</label>
+                        <input type="text" id="dateSub" name="dateSub" value="" placeholder="dd/mm/yy">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="topic">Topic:</label>
+                    <textarea id="topic" name="topic" placeholder="1st line of topic"></textarea>
+                </div>
+                
+                <!-- This is the third field to hide -->
+                <div class="form-group full-width lab-only-field">
+                    <label for="groupMembers">Group Members (one per line):</label>
+                    <textarea id="groupMembers" name="groupMembers" value=" " placeholder="**Put space before the first member.Only for 1st member."></textarea>
+                </div>
+                <!-- ========================================================== -->
+            </div>
+            
+            <div class="button-container">
+                <button type="submit">Generate PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ================== FOOTER ================== -->
+    <footer>
+        <div class="social-links">
+            <a href="https://wa.me/" target="_blank">WhatsApp</a>
+            <a href="https://www.facebook.com/sajith.jwanasinghe.3" target="_blank">Facebook</a>
+            <a href="https://www.linkedin.com/in/sajithjwanasinghe3" target="_blank">LinkedIn</a>
+            <a href="https://sajithjanitha24.github.io/sajithjanitha" target="_blank">GitHub</a>
+        </div>
+        <p>&copy; 2025 Cover Page Generator by Sajiya. All rights reserved.</p>
+    </footer>
+    <!-- ============================================ -->
+
+    <!-- ================== VISITOR COUNTER SCRIPT ================== -->
+    <script>
+        window.onload = function() {
+            let count = localStorage.getItem('visitorCount');
+            if (count === null) {
+                count = 1;
+            } else {
+                count = parseInt(count) + 1;
+            }
+            localStorage.setItem('visitorCount', count);
+            document.getElementById('visitorCount').textContent = count;
+        };
+    </script>
+    <!-- ========================================================== -->
+
+    <!-- ========================================================== -->
+    <!-- == 3. NEW JAVASCRIPT TO HIDE/SHOW FIELDS                == -->
+    <!-- ========================================================== -->
+    <script>
+        // This function runs whenever a radio button is clicked
+        function updateFormVisibility() {
+            // Get the value of the currently selected radio button ('lab' or 'assignment')
+            const selectedType = document.querySelector('input[name="report_type"]:checked').value;
+            
+            // Get a reference to the label we need to change
+            const expNoLabel = document.getElementById('expNoLabel');
+            
+            // Get ALL the fields that should only appear for lab reports
+            const labOnlyFields = document.querySelectorAll('.lab-only-field');
+
+            if (selectedType === 'assignment') {
+                // --- If ASSIGNMENT is selected ---
+                
+                // Change the label text
+                expNoLabel.textContent = 'Assignment No:';
+                
+                // Hide each of the lab-only fields
+                labOnlyFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+            } else {
+                // --- If LAB REPORT is selected ---
+                
+                // Change the label text back to the default
+                expNoLabel.textContent = 'Experiment No:';
+                
+                // Show each of the lab-only fields again
+                labOnlyFields.forEach(field => {
+                    field.style.display = 'block';
+                });
+            }
+        }
+
+        // Add an event listener to BOTH radio buttons.
+        // When either is changed, the updateFormVisibility function will run.
+        document.querySelectorAll('input[name="report_type"]').forEach(radio => {
+            radio.addEventListener('change', updateFormVisibility);
+        });
+
+        // Run the function once when the page first loads to set the initial state
+        document.addEventListener('DOMContentLoaded', updateFormVisibility);
+    </script>
+    <!-- ========================================================== -->
+
+</body>
+</html>
