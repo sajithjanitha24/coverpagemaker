@@ -131,22 +131,16 @@
 </head>
 <body>
 
-    <!-- ================== HEADER ================== -->
     <header>
         <h1>Cover Page Generator</h1>
         <div class="visitor-counter">
             Total Visitors: <span id="visitorCount">0</span>
         </div>
     </header>
-    <!-- ============================================ -->
-
     <div class="container">
-        <form action="/generate" method="POST">
+        <form action="/generate" method="POST" id="cover-form">
             <div class="grid">
 
-                <!-- ========================================================== -->
-                <!-- == 1. NEW "REPORT TYPE" SECTION ADDED HERE              == -->
-                <!-- ========================================================== -->
                 <div class="form-group full-width">
                     <label>Report Type:</label>
                     <div class="radio-group">
@@ -160,11 +154,8 @@
                         </label>
                     </div>
                 </div>
-                <!-- ========================================================== -->
-
                 <div>
                     <div class="form-group">
-                        <!-- ID added here to allow JavaScript to change the text -->
                         <label for="experimentNo" id="expNoLabel">Experiment No:</label>
                         <input type="text" id="experimentNo" name="experimentNo" value="" placeholder="01">
                     </div>
@@ -177,9 +168,6 @@
                         <input type="text" id="subjectCode" name="subjectCode" value="" placeholder="code of the subject">
                     </div>
 
-                    <!-- ========================================================== -->
-                    <!-- == 2. "lab-only-field" CLASS ADDED TO HIDE THESE FIELDS == -->
-                    <!-- ========================================================== -->
                     <div class="form-group lab-only-field">
                         <label for="instructor">Instructor:</label>
                         <input type="text" id="instructor" name="instructor" value=" " placeholder="Name of demonstrator">
@@ -218,13 +206,11 @@
                     <textarea id="topic" name="topic" placeholder="1st line of topic"></textarea>
                 </div>
                 
-                <!-- This is the third field to hide -->
                 <div class="form-group full-width lab-only-field">
                     <label for="groupMembers">Group Members (one per line):</label>
                     <textarea id="groupMembers" name="groupMembers" value=" " placeholder="**Put space before the first member.Only for 1st member."></textarea>
                 </div>
-                <!-- ========================================================== -->
-            </div>
+                </div>
             
             <div class="button-container">
                 <button type="submit">Generate PDF</button>
@@ -232,7 +218,6 @@
         </form>
     </div>
 
-    <!-- ================== FOOTER ================== -->
     <footer>
         <div class="social-links">
             <a href="https://wa.me/" target="_blank">WhatsApp</a>
@@ -242,9 +227,6 @@
         </div>
         <p>&copy; 2025 Cover Page Generator by Sajiya. All rights reserved.</p>
     </footer>
-    <!-- ============================================ -->
-
-    <!-- ================== VISITOR COUNTER SCRIPT ================== -->
     <script>
         window.onload = function() {
             let count = localStorage.getItem('visitorCount');
@@ -257,11 +239,6 @@
             document.getElementById('visitorCount').textContent = count;
         };
     </script>
-    <!-- ========================================================== -->
-
-    <!-- ========================================================== -->
-    <!-- == 3. NEW JAVASCRIPT TO HIDE/SHOW FIELDS                == -->
-    <!-- ========================================================== -->
     <script>
         // This function runs whenever a radio button is clicked
         function updateFormVisibility() {
@@ -306,7 +283,86 @@
         // Run the function once when the page first loads to set the initial state
         document.addEventListener('DOMContentLoaded', updateFormVisibility);
     </script>
-    <!-- ========================================================== -->
+    <script>
+        // Wait for the page to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Find the form using the ID we just added
+            const form = document.getElementById('cover-form');
+            
+            // Find the submit button
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // Add a 'submit' listener to the form
+            form.addEventListener('submit', function(event) {
+                
+                // 1. THIS IS THE MOST IMPORTANT FIX:
+                // Stop the browser from navigating to "/generate"
+                event.preventDefault(); 
 
-</body>
+                // --- Optional: Show a loading state on the button ---
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'Generating... Please wait...';
+                submitButton.disabled = true;
+
+                // 2. Get all the data from the form
+                const formData = new FormData(form);
+                
+                // 3. Send the data to the server in the background
+                fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if the server sent back a PDF or an error
+                    if (!response.ok) {
+                        throw new Error('Server responded with an error.');
+                    }
+                    
+                    // Get the filename from the server (e.g., "Lab_Report_Cover.pdf")
+                    const header = response.headers.get('Content-Disposition');
+                    let filename = 'cover-page.pdf'; // a default name
+                    if (header) {
+                        const filenamePart = header.match(/filename="(.+)"/);
+                        if (filenamePart && filenamePart.length === 2) {
+                            filename = filenamePart[1];
+                        }
+                    }
+                    
+                    // Return the PDF data (as a 'blob') and the filename
+                    return response.blob().then(blob => ({ blob, filename }));
+                })
+                .then(({ blob, filename }) => {
+                    // 4. Create a hidden link to download the file
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = filename; // Use the dynamic filename from the server!
+                    
+                    // Add the link to the page, click it, and then remove it
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    // Clean up
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    // --- Reset the button after download ---
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                })
+                .catch(error => {
+                    // 5. Handle any errors
+                    console.error('Error generating PDF:', error);
+                    alert('An error occurred. Please make sure the server is running and check the terminal.');
+                    
+                    // --- Reset the button on error ---
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                });
+            });
+        });
+    </script>
+    </body>
 </html>

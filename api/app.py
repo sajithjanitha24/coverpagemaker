@@ -1,24 +1,32 @@
 # FILE: app.py
-# This is the simple version for running in your browser.
+# (Located inside the 'api' folder)
 
 from flask import Flask, render_template, request, send_file
 import sys
+import os
 
-# Import the function from your other file
+# --- THIS IS THE KEY FIX ---
+# Since 'make_cover_lib.py' is in the SAME folder as 'app.py',
+# we can import it directly.
 try:
     from make_cover_lib import create_cover_page
 except ImportError:
     print("Error: Could not import 'make_cover_lib.py'.")
-    print("Make sure it is in the same folder as app.py.")
+    print("Make sure 'make_cover_lib.py' is in the 'api' folder with 'app.py'.")
     sys.exit(1)
+# --- END OF FIX ---
+
 
 # Initialize the Flask app
-app = Flask(__name__)
+# We tell Flask that the 'templates' folder is in the same directory
+app = Flask(__name__, template_folder='templates')
+
 
 # --- Your Flask Routes (Unchanged) ---
 @app.route('/')
 def index():
     """ This is the route for the home page. """
+    # This will look for 'index.html' in the 'templates' folder
     return render_template('index.html')
 
 

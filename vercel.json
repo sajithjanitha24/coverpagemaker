@@ -1,0 +1,16 @@
+{
+  "routes": [
+    {
+      "src": "/gate.html",
+      "dest": "/public/gate.html"
+    },
+    {
+      "src": "/index.html",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/generate",
+      "dest": "/api/app.py"
+    }
+  ]
+}
