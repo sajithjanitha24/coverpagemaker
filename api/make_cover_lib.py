@@ -3,7 +3,7 @@
 # --- FONT REQUIREMENT ---
 # 1. Download IBM Plex Serif: https://fonts.google.com/specimen/IBM+Plex+Serif
 # 2. Place "IBMPlexSerif-Regular.ttf" and "IBMPlexSerif-Bold.ttf"
-#    in the SAME FOLDER as this script.
+#    in the SAME FOLDER as this script (i.e., inside 'api/').
 # -------------------------
 
 import sys
@@ -28,7 +28,7 @@ FONT_BOLD_NAME = "IBMPlexSerif-Bold"
 
 try:
     # Get the directory where the script is located
-    # This logic finds the fonts whether run from CLI or web server
+    # This logic finds the fonts whether run from CLI or Vercel
     script_dir = ""
     if "__file__" in locals():
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -46,9 +46,9 @@ try:
     DEFAULT_FONT = FONT_REGULAR_NAME
     DEFAULT_FONT_BOLD = FONT_BOLD_NAME
 except Exception as e:
-    print(f"\n--- FONT WARNING ---")
+    print(f"\n--- FONT WARNING (This is a crash on Vercel) ---")
     print(f"Could not load IBM Plex Serif font. (Error: {e})")
-    print(f"Make sure '{FONT_REGULAR_FILE}' and '{FONT_BOLD_FILE}' are in the same folder as this script.")
+    print(f"Make sure '{FONT_REGULAR_FILE}' and '{FONT_BOLD_FILE}' are in the 'api' folder.")
     print("Falling back to 'Times-Roman'.\n")
     DEFAULT_FONT = "Times-Roman"
     DEFAULT_FONT_BOLD = "Times-Bold"
@@ -352,34 +352,9 @@ def draw_pdf_content(c, data, report_type):
     c.drawString(label_x, y_pos, "DATE OF SUB")
     c.drawString(value_x, y_pos, f": {data['dateSub']}")
 
-    # --- 4. Bottom-Right Section (Aligned to Middle) ---
-    y_pos_start = CONTENT_BOTTOM + (5 * line_height_small)
-    y_pos = y_pos_start
-    label_width = 30 * mm
-    value_gap = 2 * mm
-    label_x = CONTENT_MIDDLE_X
-    value_x = label_x + label_width + value_gap
-    
-    c.setFont(DEFAULT_FONT, 14)
-    
-    c.drawString(label_x, y_pos, "NAME")
-    c.drawString(value_x, y_pos, f": {data['name']}")
-    y_pos -= line_height_small
-
-    c.drawString(label_x, y_pos, "REG NO")
-    c.drawString(value_x, y_pos, f": {data['regNo']}")
-    y_pos -= line_height_small
-
-    c.drawString(label_x, y_pos, "COURSE")
-    c.drawString(value_x, y_pos, f": {data['course']}")
-    y_pos -= line_height_small
-    
-    c.drawString(label_x, y_pos, "DATE OF INS")
-    c.drawString(value_x, y_pos, f": {data['dateInstr']}")
-    y_pos -= line_height_small
-    
-    c.drawString(label_x, y_pos, "DATE OF SUB")
-    c.drawString(value_x, y_pos, f": {data['dateSub']}")
+    #
+    # --- THIS DUPLICATE BLOCK HAS BEEN REMOVED ---
+    #
 
 
 # --- 4. The "Generate PDF" Function (for Web Server) ---
@@ -443,3 +418,4 @@ if __name__ == "__main__":
         print(f"ERROR: {e}")
         
     input("\nPress Enter to exit.")
+

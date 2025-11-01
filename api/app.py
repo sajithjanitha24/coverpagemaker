@@ -1,20 +1,21 @@
 # FILE: app.py
 # (Located inside the 'api' folder - VERCEL VERSION)
+#
+# --- THIS FILE IS NOW FIXED ---
 
-# We remove 'render_template' because it's no longer used
 from flask import Flask, request, send_file
 import sys
 import os
 
 # --- THIS IS THE KEY FIX ---
-# Since 'make_cover_lib.py' is in the SAME folder as 'app.py',
-# we can import it directly.
+# I have removed ".py" from the import.
+# This is the correct Python syntax.
 try:
     from make_cover_lib import create_cover_page
-except ImportError:
+except ImportError as e:
     # This print statement will go to Vercel logs if it fails
-    print("Error: Could not import 'make_cover_lib.py'.")
-    print("Make sure 'make_cover_lib.py' and font files are in the 'api' folder.")
+    print(f"CRITICAL Error: Could not import 'make_cover_lib'. {e}")
+    print("Make sure 'make_cover_lib.py' is in the 'api' folder.")
     sys.exit(1)
 # --- END OF FIX ---
 
@@ -25,7 +26,7 @@ app = Flask(__name__)
 
 
 # --- Vercel Serverless Function ---
-# Vercel will route all requests to '/generate' to this function
+# Your vercel.json will route '/generate' requests here
 @app.route('/generate', methods=['POST'])
 def generate_pdf():
     """ This is the route that receives the form data. """
@@ -45,6 +46,7 @@ def generate_pdf():
             data[key] = value.upper()
 
         # 3. Call your Python function to generate the PDF
+        # This function finds the .ttf files because its path logic is correct
         pdf_buffer = create_cover_page(data, report_type)
 
         # --- NEW LOGIC: Change download name based on type ---
@@ -67,8 +69,9 @@ def generate_pdf():
         print(f"--- FUNCTION CRASHED ---")
         print(f"An error occurred: {e}")
         # This will show us if the font files are in the same folder
-        print(f"Working directory: {os.getcwd()}")
-        print(f"Files in directory: {os.listdir('.')}")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        print(f"Working directory: {current_dir}")
+        print(f"Files in directory: {os.listdir(current_dir)}")
         return str(e), 500
 
 #

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cover Page Generator</title>
-    
+
     <style>
         /* --- General Body Styles (Updated) --- */
         body {
             font-family: 'Times New Roman', Times, serif;
             margin: 0;
-            padding: 2em;
+            padding: 1em; /* Use 1em for better mobile spacing */
             background-color: #e0e0e0;
         }
 
@@ -42,11 +42,22 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        
+        /* --- MOBILE RESPONSIVE GRID --- */
         .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr; /* Default to 1 column for mobile */
             gap: 1.5em;
         }
+
+        /* Use a media query to go to 2 columns on larger screens */
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr; /* 2 columns on tablets and up */
+            }
+        }
+        /* --- END OF MOBILE FIX --- */
+
         .form-group {
             margin-bottom: 1em;
         }
@@ -68,6 +79,8 @@
         }
         textarea {
             height: 120px;
+            /* Fix for resize handle */
+            resize: vertical;
         }
         button {
             background: #007bff;
@@ -87,9 +100,14 @@
             text-align: center;
             color: #222;
         }
-        .full-width {
-            grid-column: 1 / -1;
+        
+        /* This selector is used by the responsive grid */
+        @media (min-width: 768px) {
+            .full-width {
+                grid-column: 1 / -1; /* Span 2 columns on large screens */
+            }
         }
+        
         .button-container {
             text-align: center;
             margin-top: 1.5em;
@@ -126,7 +144,6 @@
         .radio-group input[type="radio"] {
             margin-right: 5px;
         }
-
     </style>
 </head>
 <body>
@@ -138,6 +155,7 @@
         </div>
     </header>
     <div class="container">
+        <!-- The form action MUST be "/generate" to match your vercel.json -->
         <form action="/generate" method="POST" id="cover-form">
             <div class="grid">
 
@@ -170,11 +188,11 @@
 
                     <div class="form-group lab-only-field">
                         <label for="instructor">Instructor:</label>
-                        <input type="text" id="instructor" name="instructor" value=" " placeholder="Name of demonstrator">
+                        <input type="text" id="instructor" name="instructor" value="" placeholder="Name of demonstrator">
                     </div>
                     <div class="form-group lab-only-field">
                         <label for="group">Group:</label>
-                        <input type="text" id="group" name="group" value=" " placeholder="Group number">
+                        <input type="text" id="group" name="group" value="" placeholder="Group number">
                     </div>
                 </div>
 
@@ -208,7 +226,11 @@
                 
                 <div class="form-group full-width lab-only-field">
                     <label for="groupMembers">Group Members (one per line):</label>
-                    <textarea id="groupMembers" name="groupMembers" value=" " placeholder="**Put space before the first member.Only for 1st member."></textarea>
+                    <!-- 
+                        CORRECTION: The space must go *inside* the <textarea> tags,
+                        not in a 'value' attribute.
+                    -->
+                    <textarea id="groupMembers" name="groupMembers" placeholder="**Put space before the first member.Only for 1st member."> </textarea>
                 </div>
                 </div>
             
@@ -316,7 +338,10 @@
                 .then(response => {
                     // Check if the server sent back a PDF or an error
                     if (!response.ok) {
-                        throw new Error('Server responded with an error.');
+                        // If it's an error, get the text and throw it
+                        return response.text().then(text => {
+                            throw new Error('Server error: ' + text);
+                        });
                     }
                     
                     // Get the filename from the server (e.g., "Lab_Report_Cover.pdf")
@@ -355,7 +380,7 @@
                 .catch(error => {
                     // 5. Handle any errors
                     console.error('Error generating PDF:', error);
-                    alert('An error occurred. Please make sure the server is running and check the terminal.');
+                    alert('An error occurred. Please check the Vercel logs for more info. Error: ' + error.message);
                     
                     // --- Reset the button on error ---
                     submitButton.textContent = originalButtonText;
@@ -366,3 +391,4 @@
     </script>
     </body>
 </html>
+
